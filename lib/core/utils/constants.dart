@@ -14,12 +14,13 @@ class Constants {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('ok'))
+              child: const Text('ok'))
         ],
       ),
     );
   }
 
+  //TODO check up the result of this
   static void showToast({required String msg, Color color = Colors.red}) async {
     await Fluttertoast.showToast(
       msg: msg,
@@ -31,4 +32,6 @@ class Constants {
       fontSize: 16.0,
     );
   }
+
+// static double? screenWidth;
 }
