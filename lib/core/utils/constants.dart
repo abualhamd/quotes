@@ -33,5 +33,5 @@ class Constants {
     );
   }
 
-// static double? screenWidth;
+  static double? screenWidth;
 }

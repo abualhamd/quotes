@@ -8,22 +8,8 @@ abstract class QuoteState extends Equatable {
 
 class CubitInitState extends QuoteState {}
 
-class QuoteLoadingState extends CubitInitState {}
+class QuoteLoadingState extends QuoteState {}
 
-class QuoteSuccessState extends CubitInitState {
-  final Quote quote;
+class QuoteSuccessState extends QuoteState {}
 
-  QuoteSuccessState({required this.quote});
-
-  @override
-  List<Object?> get props => [quote];
-}
-
-class QuoteFailureState extends CubitInitState {
-  final String msg;
-
-  QuoteFailureState({required this.msg});
-
-  @override
-  List<Object?> get props => [msg];
-}
+class QuoteFailureState extends QuoteState {}
