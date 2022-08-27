@@ -1,4 +1,4 @@
-class AppStrings {
+abstract class AppStrings {
   static String appName = 'Quotes';
   static String fontFamily = 'Tajawal';
   static String cachedQuote = 'CACHED_QUOTE';
@@ -7,4 +7,5 @@ class AppStrings {
   static String serverFailure = 'Server Failure';
   static String cacheFailure = 'Cache Failure';
   static String unexpectedFailure = 'Unexpected Failure';
+  static String internetConnetionFailure = 'Check your internet connection';
 }
