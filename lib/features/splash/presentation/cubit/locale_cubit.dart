@@ -25,9 +25,11 @@ class LocaleCubit extends Cubit<LocaleState> {
 
   void navigateToHomeScreen(BuildContext context) {
     emit(LocaleShowSplash());
-    Timer(const Duration(milliseconds: 3000), () {
-      Navigator.pushReplacementNamed(context, Routes.randomQuoteRoute);
-    });
+
+    Future.delayed(const Duration(seconds: 3)).then(
+      (value) =>
+          Navigator.pushReplacementNamed(context, Routes.randomQuoteRoute),
+    );
   }
 
   void getSavedLanguage() async {

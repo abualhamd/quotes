@@ -25,7 +25,8 @@ class QuoteApp extends StatelessWidget {
           return MaterialApp(
             title: AppStrings.appName,
             theme: themeLight,
-            initialRoute: Routes.randomQuoteRoute, //Routes.splashRoute,
+            initialRoute:
+                Routes.splashRoute, //.randomQuoteRoute, //Routes.splashRoute,
             routes: routes,
             locale: Locale(cubit.currentLangCode),
             supportedLocales: AppLocalizationsSetup.supportedLocales,
