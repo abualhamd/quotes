@@ -9,7 +9,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO try to find another way of implementing this
     LocaleCubit.get(context).navigateToHomeScreen(context);
-
+    // TODO make splash screen fade not suddenly disappear
     return SafeArea(
       child: Scaffold(
         body: Center(
