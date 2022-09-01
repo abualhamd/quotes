@@ -7,5 +7,8 @@ abstract class AppStrings {
   static String serverFailure = 'Server Failure';
   static String cacheFailure = 'Cache Failure';
   static String unexpectedFailure = 'Unexpected Failure';
-  static String internetConnetionFailure = 'Check your internet connection';
+  static String checkYourInternetConnetion = 'Check your internet connection';
+  static String englishCode = 'en';
+  static String arabicCode = 'ar';
+  static String locale = 'locale';
 }

@@ -39,7 +39,7 @@ class QuoteRepoImpl implements QuoteRepo {
             await randomQuoteLocalDataSource.getLastQuote();
 
         Constants.showToast(
-            msg: AppStrings.internetConnetionFailure, color: Colors.red);
+            msg: AppStrings.checkYourInternetConnetion, color: Colors.red);
         return Right(localRandomQuote);
       } on CacheException {
         return Left(CacheFailure());

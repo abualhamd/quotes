@@ -27,6 +27,7 @@ class QuoteContent extends StatelessWidget {
           children: [
             Padding(
               padding: EdgeInsets.all(width / 20),
+              //TODO add a FittedBox
               child: Text(
                 quote.content,
                 style: quoteTextStyle,

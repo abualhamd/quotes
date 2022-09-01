@@ -16,6 +16,8 @@ class QuoteCubit extends Cubit<QuoteState> {
   late Widget body;
   QuoteCubit({required this.getRandomQuoteUseCase}) : super(CubitInitState());
 
+  static QuoteCubit get(BuildContext context) => BlocProvider.of(context);
+
   Future<void> getRandomQuote() async {
     emit(QuoteLoadingState());
     Either<Failure, Quote> response = await getRandomQuoteUseCase(NoParams());

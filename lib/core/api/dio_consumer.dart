@@ -21,11 +21,13 @@ class DioConsumer implements ApiConsumer {
     };
 
     client.options = BaseOptions(
+      // headers: {'connection': 'keep-alive'},
       baseUrl: EndPoints.baseUrl,
       followRedirects: false,
       validateStatus: (status) {
         return status! < StatusCodes.internalServerError;
       },
+      // connectTimeout: 2,
     );
 
     client.interceptors.add(di.sl<AppInterceptors>());
