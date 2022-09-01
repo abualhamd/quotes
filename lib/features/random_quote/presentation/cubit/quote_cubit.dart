@@ -25,6 +25,7 @@ class QuoteCubit extends Cubit<QuoteState> {
     emit(
       response.fold(
         (failure) {
+          // TODO handle it with regards to localization
           body = MyErrorWidget(msg: _mapFailureToMsg(failure));
           return QuoteFailureState();
         },

@@ -43,12 +43,8 @@ class QuoteScreen extends StatelessWidget {
                     ),
                     title: Column(
                       children: [
-                        // SizedBox(
-                        //   height: width / 20,
-                        // ),
                         Text(AppLocalizations.of(context)!
                             .translate('app_name')!),
-                        // Text(AppStrings.appName),
                       ],
                     ),
                   )
