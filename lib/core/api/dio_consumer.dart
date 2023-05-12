@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:dio/adapter.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:quotes/core/api/app_interceptors.dart';
 import 'package:quotes/core/api/end_points.dart';
@@ -13,7 +13,7 @@ class DioConsumer implements ApiConsumer {
   final Dio client;
 
   DioConsumer({required this.client}) {
-    (client.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+    (client.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
@@ -22,7 +22,6 @@ class DioConsumer implements ApiConsumer {
 
     client.options = BaseOptions(
       // headers: {'connection': 'keep-alive'},
-      baseUrl: EndPoints.baseUrl,
       followRedirects: false,
       validateStatus: (status) {
         return status! < StatusCodes.internalServerError;
@@ -38,9 +37,12 @@ class DioConsumer implements ApiConsumer {
 
   @override
   Future get(
-      {required String path, Map<String, dynamic>? queryParameters}) async {
+      {required String path,
+      Map<String, dynamic>? queryParameters,
+      Map<String, dynamic>? headers}) async {
     try {
-      final response = await client.get(path, queryParameters: queryParameters);
+      final response = await client.get(path,
+          queryParameters: queryParameters, options: Options(headers: headers));
       return response.data;
     } on DioError catch (error) {
       _handleDioError(error);
@@ -79,11 +81,11 @@ class DioConsumer implements ApiConsumer {
 
   dynamic _handleDioError(DioError error) {
     switch (error.type) {
-      case DioErrorType.connectTimeout:
+      case DioErrorType.connectionTimeout:
       case DioErrorType.sendTimeout:
       case DioErrorType.receiveTimeout:
         throw const FetchDataException();
-      case DioErrorType.response:
+      case DioErrorType.badResponse:
         switch (error.response?.statusCode) {
           case StatusCodes.unauthorized:
           case StatusCodes.forbidden:
@@ -92,14 +94,19 @@ class DioConsumer implements ApiConsumer {
             throw const NotFoundException();
           case StatusCodes.conflict:
             throw const ConflictException();
-
           case StatusCodes.internalServerError:
             throw const InternalServerErrorException();
         }
         break;
       case DioErrorType.cancel:
         break;
-      case DioErrorType.other:
+      case DioErrorType.badCertificate:
+        // TODO: Handle this case.
+        break;
+      case DioErrorType.connectionError:
+        // TODO: Handle this case.
+        break;
+      case DioErrorType.unknown:
         throw const NoInternetConnectionException();
     }
   }
