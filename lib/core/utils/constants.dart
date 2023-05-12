@@ -20,7 +20,6 @@ class Constants {
     );
   }
 
-  //TODO check up the result of this
   static void showToast({required String msg, Color color = Colors.red}) async {
     await Fluttertoast.showToast(
       msg: msg,

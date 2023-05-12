@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FavoriteQuoteScreen extends StatelessWidget {
-  // static const String id = 'FavoriteScreen';
+  // TODO add favorite feature
 
   const FavoriteQuoteScreen({Key? key}) : super(key: key);
 

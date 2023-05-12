@@ -16,6 +16,8 @@ class QuoteCubit extends Cubit<QuoteState> {
   late Widget body;
   QuoteCubit({required this.getRandomQuoteUseCase}) : super(CubitInitState());
 
+  static QuoteCubit get(BuildContext context) => BlocProvider.of(context);
+
   Future<void> getRandomQuote() async {
     emit(QuoteLoadingState());
     Either<Failure, Quote> response = await getRandomQuoteUseCase(NoParams());
@@ -23,6 +25,7 @@ class QuoteCubit extends Cubit<QuoteState> {
     emit(
       response.fold(
         (failure) {
+          // TODO handle it with regards to localization
           body = MyErrorWidget(msg: _mapFailureToMsg(failure));
           return QuoteFailureState();
         },

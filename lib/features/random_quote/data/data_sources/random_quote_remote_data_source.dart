@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:quotes/core/api/api_consumer.dart';
 import 'package:quotes/features/random_quote/data/models/quote_model.dart';
 import '../../../../core/api/end_points.dart';
@@ -13,8 +15,9 @@ class RandomQuoteRemoteDataSourceImpl implements RandomQuoteRemoteDataSource {
 
   @override
   Future<QuoteModel> getRandomQuote() async {
-    final response = await apiConsumer.get(path: EndPoints.randomQuotePath);
-
-    return QuoteModel.fromJson(response);
+    final List<dynamic> quotes = await apiConsumer.get(
+        path: EndPoints.ninjasAPI,
+        headers: {'X-Api-Key': dotenv.env['API_KEY']});
+    return QuoteModel.fromJson(quotes[0]);
   }
 }
