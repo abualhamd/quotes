@@ -2,25 +2,31 @@ import 'dart:io';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
 import 'package:quotes/core/api/app_interceptors.dart';
-import 'package:quotes/core/api/end_points.dart';
 import 'api_consumer.dart';
 import 'package:dio/dio.dart';
 import 'package:quotes/core/error/exceptions.dart';
 import 'status_codes.dart';
-import 'package:quotes/injection_container.dart' as di;
 
 class DioConsumer implements ApiConsumer {
-  final Dio client;
+  final Dio _client;
+  final AppInterceptors _appInterceptors;
+  final LogInterceptor _logInterceptor;
 
-  DioConsumer({required this.client}) {
-    (client.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
+  DioConsumer({
+    required Dio client,
+    required AppInterceptors appInterceptors,
+    required LogInterceptor logInterceptor,
+  })  : _client = client,
+        _appInterceptors = appInterceptors,
+        _logInterceptor = logInterceptor {
+    (_client.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
       return client;
     };
 
-    client.options = BaseOptions(
+    _client.options = BaseOptions(
       // headers: {'connection': 'keep-alive'},
       followRedirects: false,
       validateStatus: (status) {
@@ -29,9 +35,9 @@ class DioConsumer implements ApiConsumer {
       // connectTimeout: 2,
     );
 
-    client.interceptors.add(di.sl<AppInterceptors>());
+    _client.interceptors.add(_appInterceptors);
     if (kDebugMode) {
-      client.interceptors.add(di.sl<LogInterceptor>());
+      _client.interceptors.add(_logInterceptor);
     }
   }
 
@@ -41,7 +47,7 @@ class DioConsumer implements ApiConsumer {
       Map<String, dynamic>? queryParameters,
       Map<String, dynamic>? headers}) async {
     try {
-      final response = await client.get(path,
+      final response = await _client.get(path,
           queryParameters: queryParameters, options: Options(headers: headers));
       return response.data;
     } on DioError catch (error) {
@@ -56,7 +62,7 @@ class DioConsumer implements ApiConsumer {
       bool formDataEnabled = false,
       Map<String, dynamic>? queryParameters}) async {
     try {
-      final response = await client.post(path,
+      final response = await _client.post(path,
           data: formDataEnabled ? FormData.fromMap(body) : body,
           queryParameters: queryParameters);
       return response.data;
@@ -71,8 +77,8 @@ class DioConsumer implements ApiConsumer {
       required Map<String, dynamic> body,
       Map<String, dynamic>? queryParameters}) async {
     try {
-      final response =
-          await client.post(path, data: body, queryParameters: queryParameters);
+      final response = await _client.post(path,
+          data: body, queryParameters: queryParameters);
       return response.data;
     } on DioError catch (error) {
       _handleDioError(error);

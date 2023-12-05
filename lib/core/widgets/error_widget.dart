@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/locale/app_localizations.dart';
 import '../utils/constants.dart';
@@ -21,7 +20,7 @@ class MyErrorWidget extends StatelessWidget {
           AppLocalizations.of(context)!.translate("something_went_wrong")!,
           style: Theme.of(context)
               .textTheme
-              .headline6!
+              .titleLarge!
               .copyWith(fontWeight: FontWeight.bold),
         ),
         Padding(
@@ -31,7 +30,7 @@ class MyErrorWidget extends StatelessWidget {
           child: Text(
             AppLocalizations.of(context)!
                 .translate("check_your_internet_connection")!,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: Colors.grey,
                   fontSize: width / 25,
                   fontWeight: FontWeight.bold,
@@ -50,7 +49,7 @@ class MyErrorWidget extends StatelessWidget {
               // 'Reload Screen',
               style: Theme.of(context)
                   .textTheme
-                  .headline6!
+                  .titleLarge!
                   .copyWith(fontWeight: FontWeight.bold, color: Colors.white),
             ),
           ),

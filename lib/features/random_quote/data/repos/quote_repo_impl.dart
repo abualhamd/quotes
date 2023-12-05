@@ -1,7 +1,4 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/core/error/failures.dart';
 import 'package:quotes/core/utils/app_strings.dart';
 import 'package:quotes/core/utils/constants.dart';
 import 'package:quotes/features/random_quote/domain/entities/quote.dart';
@@ -24,25 +21,17 @@ class QuoteRepoImpl implements QuoteRepo {
   @override
   Future<Quote> getRandomQuote() async {
     if (await networkInfo.isConnected) {
-      // try {
       final remoteRandomQuote =
           await randomQuoteRemoteDataSource.getRandomQuote();
       randomQuoteLocalDataSource.cacheQuote(quoteModel: remoteRandomQuote);
 
       return remoteRandomQuote;
-      // } on ServerException {
-      //   return Left(ServerFailure());
-      // }
     } else {
-      // try {
       final localRandomQuote = await randomQuoteLocalDataSource.getLastQuote();
 
       Constants.showToast(
           msg: AppStrings.checkYourInternetConnetion, color: Colors.red);
       return localRandomQuote;
-      // } on CacheException {
-      //   return Left(CacheFailure());
-      // }
     }
   }
 }

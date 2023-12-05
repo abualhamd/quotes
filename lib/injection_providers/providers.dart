@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:quotes/core/api/app_interceptors.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,13 +12,28 @@ import '../features/random_quote/data/data_sources/random_quote_remote_data_sour
 import '../features/random_quote/data/repos/quote_repo_impl.dart';
 import '../features/random_quote/domain/entities/quote.dart';
 import '../features/random_quote/domain/repositories/quote_repo.dart';
+import '../features/splash/data/datasources/local_data_source.dart';
+import '../features/splash/data/repositories/lang_repo_impl.dart';
+import '../features/splash/domain/repositories/lang_repo.dart';
 
 part 'providers.g.dart';
 
 //? use cases
+//* random quote
 @riverpod
 Future<Quote> randomQuoteUsecase(RandomQuoteUsecaseRef ref) {
   return ref.watch(_randomQuoteRepoProvider).getRandomQuote();
+}
+
+//* lange & locale
+@riverpod
+FutureOr<bool> changeLangUsecase(ChangeLangUsecaseRef ref, String langCode) {
+  return ref.watch(_langRepoProvider).changeLang(langCode: langCode);
+}
+
+@riverpod
+FutureOr<String> getSavedLangUsecase(GetSavedLangUsecaseRef ref) {
+  return ref.watch(_langRepoProvider).getSavedLang();
 }
 
 //? repos
@@ -31,6 +47,12 @@ QuoteRepo _randomQuoteRepo(_RandomQuoteRepoRef ref) {
   );
 }
 
+@Riverpod(keepAlive: true)
+LangRepo _langRepo(_LangRepoRef ref) {
+  return LangRepoImpl(
+      localDataSource: ref.watch(_splashLocalDataSourceProvider));
+}
+
 //? data sources
 //* random quote
 @Riverpod(keepAlive: true)
@@ -38,6 +60,12 @@ RandomQuoteLocalDataSource _randomQutoeLocalDataSource(
     _RandomQutoeLocalDataSourceRef ref) {
   return RandomQuoteLocalDataSourceImpl(
       sharedPreferences: ref.watch(sharedPrefsProvider));
+}
+
+//* splash
+@Riverpod(keepAlive: true)
+SplashLocalDataSource _splashLocalDataSource(_SplashLocalDataSourceRef ref) {
+  return SplashLocalDataSourceImpl(sharedPref: ref.watch(sharedPrefsProvider));
 }
 
 @Riverpod(keepAlive: true)
@@ -56,7 +84,11 @@ NetworkInfo _networkInfo(_NetworkInfoRef ref) {
 
 @Riverpod(keepAlive: true)
 ApiConsumer _apiConsumer(_ApiConsumerRef ref) {
-  return DioConsumer(client: ref.watch(_dioProvider));
+  return DioConsumer(
+    client: ref.watch(_dioProvider),
+    appInterceptors: ref.watch(_appInterceptorsProvider),
+    logInterceptor: ref.watch(_logInterceptorProvider),
+  );
 }
 
 //? external
@@ -70,6 +102,19 @@ SharedPreferences sharedPrefs(SharedPrefsRef ref) {
 @Riverpod(keepAlive: true)
 Dio _dio(_DioRef ref) {
   return Dio();
+}
+
+@Riverpod(keepAlive: true)
+AppInterceptors _appInterceptors(_AppInterceptorsRef ref) {
+  return AppInterceptors();
+}
+
+@Riverpod(keepAlive: true)
+LogInterceptor _logInterceptor(_LogInterceptorRef ref) {
+  return LogInterceptor(
+    requestBody: true,
+    responseBody: true,
+  );
 }
 
 //* connection checker

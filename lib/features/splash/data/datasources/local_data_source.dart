@@ -26,6 +26,5 @@ class SplashLocalDataSourceImpl implements SplashLocalDataSource {
       await changeLang(AppStrings.englishCode);
       return AppStrings.englishCode;
     }
-    // return _sharedPref.getString(AppStrings.locale) ?? AppStrings.englishCode;
   }
 }

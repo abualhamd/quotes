@@ -1,30 +1,19 @@
-import 'package:quotes/core/error/exceptions.dart';
-import 'package:quotes/core/error/failures.dart';
-import 'package:dartz/dartz.dart';
 import 'package:quotes/features/splash/data/datasources/local_data_source.dart';
 import 'package:quotes/features/splash/domain/repositories/lang_repo.dart';
 
 class LangRepoImpl implements LangRepo {
-  final SplashLocalDataSourceImpl _localDataSourceImpl;
+  final SplashLocalDataSource _localDataSource;
 
-  LangRepoImpl({required SplashLocalDataSourceImpl localDataSourceImpl})
-      : _localDataSourceImpl = localDataSourceImpl;
+  LangRepoImpl({required SplashLocalDataSource localDataSource})
+      : _localDataSource = localDataSource;
 
   @override
-  Future<Either<Failure, bool>> changeLang({required String langCode}) async {
-    try {
-      return Right(await _localDataSourceImpl.changeLang(langCode));
-    } on CacheException {
-      return Left(CacheFailure());
-    }
+  Future<bool> changeLang({required String langCode}) async {
+    return await _localDataSource.changeLang(langCode);
   }
 
   @override
-  Future<Either<Failure, String>> getSavedLang() async {
-    try {
-      return Right(await _localDataSourceImpl.getSavedLang());
-    } on CacheException {
-      return Left(CacheFailure());
-    }
+  Future<String> getSavedLang() async {
+    return await _localDataSource.getSavedLang();
   }
 }

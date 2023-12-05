@@ -1,6 +1,6 @@
-import 'package:quotes/service_providers/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../../injection_providers/providers.dart';
 import '../../domain/entities/quote.dart';
 
 part 'random_quote_provider.g.dart';
