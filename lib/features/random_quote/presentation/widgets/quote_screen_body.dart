@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quotes/features/random_quote/presentation/widgets/quote_content.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/constants.dart';
 import '../../domain/entities/quote.dart';
-import '../cubit/quote_cubit.dart';
 
 class QuoteScreenBody extends StatelessWidget {
   final Quote quote;
-  const QuoteScreenBody({super.key, required this.quote});
+  final VoidCallback onTap;
+  const QuoteScreenBody({super.key, required this.quote, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +27,7 @@ class QuoteScreenBody extends StatelessWidget {
           height: width / 10,
         ),
         InkWell(
-          onTap: () {
-            context.read<QuoteCubit>().getRandomQuote();
-          },
+          onTap: onTap,
           child: CircleAvatar(
             backgroundColor: AppColors.primary,
             child: const Icon(

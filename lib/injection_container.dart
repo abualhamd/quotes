@@ -9,7 +9,6 @@ import 'package:quotes/features/random_quote/data/data_sources/random_quote_remo
 import 'package:quotes/features/random_quote/data/repos/quote_repo_impl.dart';
 import 'package:quotes/features/random_quote/domain/repositories/quote_repo.dart';
 import 'package:quotes/features/random_quote/domain/usecases/get_random_quote.dart';
-import 'package:quotes/features/random_quote/presentation/cubit/quote_cubit.dart';
 import 'package:quotes/features/splash/data/datasources/local_data_source.dart';
 import 'package:quotes/features/splash/data/repositories/lang_repo_impl.dart';
 import 'package:quotes/features/splash/domain/repositories/lang_repo.dart';
@@ -26,7 +25,7 @@ Future<void> init() async {
   /// Features
 
   // cubit
-  sl.registerFactory<QuoteCubit>(() => QuoteCubit(getRandomQuoteUseCase: sl()));
+  // sl.registerFactory<QuoteCubit>(() => QuoteCubit(getRandomQuoteUseCase: sl()));
   sl.registerFactory<LocaleCubit>(
     () => LocaleCubit(
       changeLangUseCase: sl(),
@@ -36,8 +35,8 @@ Future<void> init() async {
 
   // usecases
   //*randomQuote feature
-  sl.registerLazySingleton<GetRandomQuote>(
-      () => GetRandomQuote(quoteRepo: sl()));
+  // sl.registerLazySingleton<GetRandomQuote>(
+  //     () => GetRandomQuote(quoteRepo: sl()));
   //*splash feature
   sl.registerLazySingleton<ChangeLangUseCase>(
       () => ChangeLangUseCase(langRepo: sl()));

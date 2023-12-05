@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../config/locale/app_localizations.dart';
-import '../../features/random_quote/presentation/cubit/quote_cubit.dart';
 import '../utils/constants.dart';
 
 class MyErrorWidget extends StatelessWidget {
@@ -41,7 +40,7 @@ class MyErrorWidget extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            context.read<QuoteCubit>().getRandomQuote();
+            // context.read<QuoteCubit>().getRandomQuote();
           },
           child: Padding(
             padding: EdgeInsets.symmetric(

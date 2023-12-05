@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:quotes/core/api/api_consumer.dart';
 import 'package:quotes/features/random_quote/data/models/quote_model.dart';

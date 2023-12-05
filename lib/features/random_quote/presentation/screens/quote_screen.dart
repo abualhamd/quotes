@@ -1,64 +1,72 @@
-import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quotes/config/locale/app_localizations.dart';
 import 'package:quotes/core/utils/app_colors.dart';
 import 'package:quotes/core/utils/media_query_values.dart';
-import 'package:quotes/features/random_quote/presentation/cubit/quote_cubit.dart';
 import '../../../../core/utils/constants.dart';
-import 'package:quotes/injection_container.dart' as di;
 
+import '../../../../core/widgets/error_widget.dart';
 import '../../../splash/presentation/cubit/locale_cubit.dart';
+import '../provider/random_quote_provider.dart';
+import '../widgets/quote_screen_body.dart';
 
-class QuoteScreen extends StatelessWidget {
+class QuoteScreen extends ConsumerWidget {
   const QuoteScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(randomQuoteProvider).mapOrNull(
+      // data: data,
+      // error: error,
+      loading: (_) {
+        print("is loading");
+      },
+    );
+
     final double width = context.width;
     Constants.screenWidth = width;
 
-    return BlocProvider(
-      create: (context) => di.sl<QuoteCubit>()..getRandomQuote(),
-      child: BlocConsumer<QuoteCubit, QuoteState>(
-        listener: (context, state) {},
-        builder: (context, state) {
-          LocaleCubit cubit = LocaleCubit.get(context);
+    LocaleCubit cubit = LocaleCubit.get(context);
 
-          return Scaffold(
-            appBar: (state is! QuoteFailureState)
-                ? AppBar(
-                    // shape: ,
-                    leading: Padding(
-                      padding: EdgeInsetsDirectional.only(start: width / 15),
-                      child: InkWell(
-                        onTap: () {
-                          cubit.changeLanguage();
-                        },
-                        child: Icon(
-                          Icons.translate_outlined,
-                          color: AppColors.primary,
-                        ),
-                      ),
-                    ),
-                    title: Column(
-                      children: [
-                        Text(AppLocalizations.of(context)!
-                            .translate('app_name')!),
-                      ],
-                    ),
-                  )
-                : null,
-            body: ConditionalBuilder(
-              condition: state is! QuoteLoadingState,
-              builder: (context) => context.watch<QuoteCubit>().body,
-              fallback: (context) => const Center(
-                child: CircularProgressIndicator(),
+    return Scaffold(
+      appBar: ref.watch(randomQuoteProvider).maybeMap(
+          error: (_) => const PreferredSize(
+              preferredSize: Size.zero, child: SizedBox.shrink()),
+          orElse: () {
+            return AppBar(
+              leading: Padding(
+                padding: EdgeInsetsDirectional.only(start: width / 15),
+                child: InkWell(
+                  onTap: () {
+                    cubit.changeLanguage();
+                  },
+                  child: Icon(
+                    Icons.translate_outlined,
+                    color: AppColors.primary,
+                  ),
+                ),
               ),
-            ),
-          );
-        },
-      ),
+              title: Column(
+                children: [
+                  Text(AppLocalizations.of(context)!.translate('app_name')!),
+                ],
+              ),
+            );
+          }),
+      body: ref.watch(randomQuoteProvider).map(
+            data: (quote) {
+              return QuoteScreenBody(
+                quote: quote.value,
+                onTap: () {
+                  ref.invalidate(randomQuoteProvider);
+                },
+              );
+            },
+            error: (error) {
+              return MyErrorWidget(msg: error.error.toString());
+            },
+            loading: (_) => const Center(child: CircularProgressIndicator()),
+          ),
     );
   }
 }

@@ -22,28 +22,27 @@ class QuoteRepoImpl implements QuoteRepo {
       required this.randomQuoteRemoteDataSource});
 
   @override
-  Future<Either<Failure, Quote>> getRandomQuote() async {
+  Future<Quote> getRandomQuote() async {
     if (await networkInfo.isConnected) {
-      try {
-        final remoteRandomQuote =
-            await randomQuoteRemoteDataSource.getRandomQuote();
-        randomQuoteLocalDataSource.cacheQuote(quoteModel: remoteRandomQuote);
+      // try {
+      final remoteRandomQuote =
+          await randomQuoteRemoteDataSource.getRandomQuote();
+      randomQuoteLocalDataSource.cacheQuote(quoteModel: remoteRandomQuote);
 
-        return Right(remoteRandomQuote);
-      } on ServerException {
-        return Left(ServerFailure());
-      }
+      return remoteRandomQuote;
+      // } on ServerException {
+      //   return Left(ServerFailure());
+      // }
     } else {
-      try {
-        final localRandomQuote =
-            await randomQuoteLocalDataSource.getLastQuote();
+      // try {
+      final localRandomQuote = await randomQuoteLocalDataSource.getLastQuote();
 
-        Constants.showToast(
-            msg: AppStrings.checkYourInternetConnetion, color: Colors.red);
-        return Right(localRandomQuote);
-      } on CacheException {
-        return Left(CacheFailure());
-      }
+      Constants.showToast(
+          msg: AppStrings.checkYourInternetConnetion, color: Colors.red);
+      return localRandomQuote;
+      // } on CacheException {
+      //   return Left(CacheFailure());
+      // }
     }
   }
 }
